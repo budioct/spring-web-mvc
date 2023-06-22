@@ -7,8 +7,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.test.web.servlet.MockMvcBuilder.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -85,5 +87,70 @@ class HelloControllerMockMVCTest {
         );
 
     }
+
+    /**
+     * Request Method
+     * ● Saat kita menggunakan RequestMapping, terdapat attribute method yang bisa kita gunakan untuk
+     *   menentukan jenis HTTP Method yang diperbolehkan
+     * ● Secara default, jika kita tidak memilihnya, maka Controller Method tersebut bisa diakses oleh
+     *   seluruh jenis HTTP Method
+     * ● Jika kita mengirim method yang tidak diperbolehkan, maka Spring akan menolak dengan response 405 Method Not Allowed
+     *
+     * Shortcut Annotation
+     * RequestMapping Method    Shortcut Annotation
+     * GET                      @GetMapping
+     * POST                     @PostMapping
+     * PUT                      @PutMapping
+     * PATCH                    @PatchMapping
+     * DELETE                   @DeleteMapping
+     */
+
+    @Test
+    void testPostNotAllow() throws Exception {
+
+        // kita uji coba pada endopoint yang sudah di set HTTP method get. tetapi kita melkukan post maka ini tidak di izinkan
+
+        // ResultActions perform(RequestBuilder requestBuilder) throws Exception // Buat Mock HttpServletRequestBuilder untuk permintaan POST.
+        // ResultMatcher isMethodNotAllowed() // Tegaskan kode status respons adalah HttpStatus.METHOD_NOT_ALLOWED(405).
+
+        mockMvc.perform(
+                post("/hellomethodget")
+                        .queryParam("name", "budhi")
+        ).andExpectAll(
+                status().isMethodNotAllowed()
+        );
+
+    }
+
+    @Test
+    void testHelloServiceShortcut() throws Exception {
+
+        // uji coba endpoint dengan annotation shortcut request mapping @GetMapping dari spring boot
+
+        mockMvc.perform(
+                get("/helloserviceshortcut")
+                        .queryParam("name", "budhi")
+        ).andExpectAll(
+                status().isOk(),
+                content().string(Matchers.containsString("Hello budhi"))
+        );
+
+    }
+
+    @Test
+    void testHelloServiceRequestParam() throws Exception {
+
+        // uji coba endpoint dengan annotation @RequestParam yang ada di parameter method
+
+        mockMvc.perform(
+                get("/helloservicerequestparam")
+                        .queryParam("name", "budhi")
+        ).andExpectAll(
+                status().isOk(),
+                content().string(Matchers.containsString("Hello budhi"))
+        );
+
+    }
+
 
 }

@@ -1,10 +1,17 @@
 package com.tutorial.mvc.controller;
 
+import com.tutorial.mvc.service.HelloService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Controller // @Controller untuk menandakan class ini adalah controller dan sudah di teregistrasi sebagai @Bean di spring boot
 public class HelloController {
@@ -32,10 +39,98 @@ public class HelloController {
      * ● Pada application.properties
      */
 
+    @Autowired
+    private HelloService helloService;
+
     @RequestMapping(path = "/hello") // @RequestMapping() yang handle routing http
     public void helloWorld(HttpServletResponse response) throws IOException {
+
         // HttpServletResponse // object web servlet java yang handle response ke client
-        response.getWriter().println("Hello world"); // PrintWriter getWriter() throws IOException; // Mengembalikan PrintWriter objek yang dapat mengirim teks karakter ke klien.
+        response.getWriter().println("Hello World"); // PrintWriter getWriter() throws IOException; // Mengembalikan PrintWriter objek yang dapat mengirim teks karakter ke klien.
+
+        /**
+         * endpoint: http://localhost:8080/hello
+         */
     }
+
+    @RequestMapping(path = "/hellobro")
+    public void helloWorld(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        String name = request.getParameter("name"); // String getParameter(String var1); // Mengembalikan nilai parameter permintaan sebagai String, atau nulljika parameter tidak ada.
+
+        // jika parameter null makan akan di replace Guest
+        if (Objects.isNull(name)){
+            name = "Guest";
+        }
+
+        response.getWriter().println("Hello " + name);
+
+        /**
+         * endpoint: http://localhost:8080/hellobro?name=budhi
+         */
+    }
+
+    @RequestMapping(path = "/helloservice")
+    public void helloService(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        String name = request.getParameter("name"); // String getParameter(String var1); // Mengembalikan nilai parameter permintaan sebagai String, atau nulljika parameter tidak ada.
+        String responseBody = helloService.hello(name);
+        response.getWriter().println(responseBody);
+
+        /**
+         * endpoint: http://localhost:8080/helloservice?name=budhi
+         */
+    }
+
+    /**
+     * Servlet Request dan Response
+     * ● Saat kita membuat Controller Handler dengan RequestMapping
+     * ● Kita bisa menambahkan parameter HttpServletRequest atau HttpServletResponse jika memang
+     *   butuh object tersebut
+     * ● Tidak ada aturan posisi parameter, karena Spring WebMVC bisa mendeteksi secara otomatis tipe
+     *   dan posisi parameter nya
+     */
+
+    @RequestMapping(path = "/hellomethodget", method = RequestMethod.GET) // method() menentukan jenis HTTP method yang di perbolehkan untuk mengakses endpoint
+    public void helloRequestMethodGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        String name = request.getParameter("name"); // String getParameter(String var1); // Mengembalikan nilai parameter permintaan sebagai String, atau nulljika parameter tidak ada.
+        String responseBody = helloService.hello(name);
+        response.getWriter().println(responseBody);
+
+        /**
+         * endpoint: http://localhost:8080/hellomethodget?name=budhi
+         */
+
+    }
+
+    @GetMapping(path = "/helloserviceshortcut")
+    public void helloServiceShortcut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        // @GetMapping adalah shortcut dari @RequestMapping supaya sebih spesifik dan implisit, untuk menghandle enpoint
+
+        String name = request.getParameter("name"); // String getParameter(String var1); // Mengembalikan nilai parameter permintaan sebagai String, atau nulljika parameter tidak ada.
+        String responseBody = helloService.hello(name);
+        response.getWriter().println(responseBody);
+
+        /**
+         * endpoint: http://localhost:8080/helloserviceshortcut?name=budhi
+         */
+    }
+
+    @RequestMapping(path = "/helloservicerequestparam")
+    public void helloService(@RequestParam(name = "name", required = false) String name,
+                             HttpServletResponse response) throws IOException {
+        // @RequestParam // menerima parameter request dari user. method name() sebagai set key nama parameter
+
+        String responseBody = helloService.hello(name);
+        response.getWriter().println(responseBody);
+
+        /**
+         * endpoint: http://localhost:8080/helloservicerequestparam?name=budhi
+         */
+    }
+
+
 
 }
