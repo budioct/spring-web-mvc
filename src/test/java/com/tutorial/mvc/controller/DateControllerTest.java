@@ -32,6 +32,7 @@ class DateControllerTest {
 
         // query param sesuai dengan converter
         // response sesuai dengan yang dibuat controller
+        // MockHttpServletRequestBuilder queryParam(String name, String... values) // Tambahkan ke string kueri dan tambahkan juga ke request parameters map.
 
         mockMvc.perform(
                 get("/date")

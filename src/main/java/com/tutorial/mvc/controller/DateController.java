@@ -40,6 +40,10 @@ public class DateController {
 
         response.getWriter().println("Date : " + dateFormat.format(date)); // final String format(Date date) // konversi dari Date ke String
 
+        /**
+         * endpoint: localhost:8080/date?date=2023-10-10
+         */
+
     }
 
     @GetMapping(path = "/datewithresponsebody")
@@ -50,6 +54,10 @@ public class DateController {
         // spring nantinya akan mencari converter date secara otomatis yang telah dibuat
 
         return "Date : " + dateFormat.format(date); // final String format(Date date) // konversi dari Date ke String
+
+        /**
+         * endpoint: localhost:8080/datewithresponsebody?date=2023-10-10
+         */
 
     }
 

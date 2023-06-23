@@ -31,6 +31,12 @@ public class HeaderController {
         } else {
             return "KO";
         }
+
+        /**
+         * enpoint: localhost:8080/header/token
+         * add header key:value => X-TOKEN: Budhi
+         * add header key:value => x-token: Budhi
+         */
     }
 
 

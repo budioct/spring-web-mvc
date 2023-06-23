@@ -40,6 +40,11 @@ public class OrderController {
 
         return "Order: " + orderId + ", Product: " + productId; // Order: 1, Product: 2
 
+        /**
+         * endpoint: localhost:8080//orders/{orderId}/products/{productId}
+         * endpoint: localhost:8080//orders/23/products/21
+         */
+
     }
 
 

@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.MockMvcBuilder.*;
@@ -24,7 +25,8 @@ class FormControllerTest {
     void testFormHello() throws Exception {
 
         // ini akan error saat kita input form karena kita belum menambahkan conten-Type nyaa
-        // MockHttpServletRequestBuilder contentType(MediaType contentType) //Setel tajuk 'Tipe-Konten' dari permintaan.
+        // MockHttpServletRequestBuilder contentType(MediaType contentType) // Setel the 'Tipe-Konten' dari permintaan.
+        // MockHttpServletRequestBuilder queryParam(String name, String... values) // Tambahkan ke string kueri dan tambahkan juga ke request parameters map.
 
         mockMvc.perform(
                 post("/form/hello")
@@ -33,6 +35,29 @@ class FormControllerTest {
         ).andExpectAll(
                 status().isOk(),
                 content().string(Matchers.containsString("Hello budhi"))
+        );
+
+    }
+
+    @Test
+    void testFormPerson() throws Exception {
+
+        // ini kita akan get request parameter atau query parameter servlet
+        // MockHttpServletRequestBuilder contentType(MediaType contentType) // Setel the 'Tipe-Konten' dari permintaan.
+        // MockHttpServletRequestBuilder param(String name, String... values) // Tambahkan parameter permintaan ke MockHttpServletRequest.getParameterMap().
+
+        mockMvc.perform(
+                post("/form/person")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .param("name", "budhi")
+                        .param("birthDate", "2023-10-10")
+                        .param("address", "indonesia")
+        ).andExpectAll(
+                status().isOk(),
+                content().string(Matchers.containsString("Success create Person with name : budhi" +
+                        ", birthDate: 20231010" +
+                        ", address : indonesia"
+                        ))
         );
 
     }
