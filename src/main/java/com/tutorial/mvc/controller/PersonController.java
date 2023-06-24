@@ -1,6 +1,7 @@
 package com.tutorial.mvc.controller;
 
 import com.tutorial.mvc.entity.CreatePersonRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -42,14 +43,25 @@ public class PersonController {
      *   ○ namaParam[0].field2=data2
      *   ○ namaParam[1].field1=data1
      *   ○ namaParam[1].field2=data2
+     *
+     * Validation
+     * ● Spring WebMVC terintegrasi dengan baik dengan Bean Validation seperti yang sudah kita bahas di
+     *   materi Spring Validation
+     * ● Saat kita membuat parameter @ModelAttribute atau @RequestBody, jika object tersebut ingin di
+     *   validasi secara otomatis menggunakan Bean Validation, kita bisa tambahkan annotation @Valid
+     * ● Jika data tidal valid, secara otomatis Spring akan mengembalikan response 400 Bad Request
+     * ● Khusus validasi di Controller, exception yang akan dibuat adalah
+     *   MethodArgumentNotValidException bukan ConstraintViolationException nya Bean Validation
      */
 
     @PostMapping(path = "/create/person", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public String createPerson(@ModelAttribute CreatePersonRequest request){
+    public String createPerson(@ModelAttribute @Valid CreatePersonRequest request){
 
         // @ModelAttribute annotation yang menghendle object/class bean. karna pasti akan melelahkan jika menggunkan @RequestParam
+        // @Valid // terintegrasi dengan spring WEBMVC , saat membuat parameter @ModelAttribute atau @RequestBody, jika object tersebut ingin di
+        // validasi secara otomatis menggunakan Bean Validation. Jika data tidal valid, secara otomatis Spring akan mengembalikan response 400 Bad Request (request di tolak)
 
         return new StringBuilder().append("Success create person ")
                 .append(request.getFirstName()).append(" ")
@@ -59,13 +71,18 @@ public class PersonController {
                 .append(" and phone ").append(request.getPhone())
                 .toString();
 
+        /**
+         * method post http
+         * endpoint: localhost:8080/create/person?objectCreatePersonRequest=valueAttribute
+         */
+
     }
 
     // nested object
     @PostMapping(path = "/create/personnedtedobject", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public String createPersonNested(@ModelAttribute CreatePersonRequest request){
+    public String createPersonNested(@ModelAttribute @Valid CreatePersonRequest request){
 
         // @ModelAttribute annotation yang menghendle object/class bean. karna pasti akan melelahkan jika menggunkan @RequestParam
         // @ModelAttribute juga power full dia bisa membaca nedted object yang di sematkan
@@ -84,6 +101,11 @@ public class PersonController {
                 .append(request.getAddress().getCountry()).append(", ")
                 .append(request.getAddress().getPostalCode())
                 .toString();
+
+        /**
+         * method post http
+         * endpoint: localhost:8080/create/personnedtedobject?objectCreatePersonRequest=valueAttribute&objcetCreateAddressRequest=valueAttribute&objectCreateSocialMediaRequest=valueAttribute
+         */
 
     }
 
