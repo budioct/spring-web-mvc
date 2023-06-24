@@ -33,7 +33,9 @@ public class ErrorController {
      *
      */
 
-    // error dari spring
+    // ini adalah joinpoint dan pointcut Exception
+
+    // error dari spring.. yang handle pesan Exception. dan berjalan di Runtime
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> methodArgumentNotValidException(MethodArgumentNotValidException exception){
 
