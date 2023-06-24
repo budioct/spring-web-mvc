@@ -1,14 +1,21 @@
 package com.tutorial.mvc.controller;
 
 import com.tutorial.mvc.entity.CreatePersonRequest;
+import com.tutorial.mvc.entity.CreateSocialMediaRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.util.List;
 
 @Controller
 public class PersonController {
@@ -52,6 +59,15 @@ public class PersonController {
      * ● Jika data tidal valid, secara otomatis Spring akan mengembalikan response 400 Bad Request
      * ● Khusus validasi di Controller, exception yang akan dibuat adalah
      *   MethodArgumentNotValidException bukan ConstraintViolationException nya Bean Validation
+     *
+     * Binding Result
+     * ● Secara default, jika terjadi error di @ModelAttribute atau @RequestBody, maka akan throw
+     *   exception MethodArgumentNotValidExceptio
+     * ● Kadang kita tidak ingin hal itu terjadi, misal kita ingin tetap masuk ke Controller Method, karena di
+     *   dalam nya kita ingin menampilkan halaman errornya misalnya
+     * ● Pada kasus seperti itu, kita bisa tambahkan parameter BindingResult di sebelah parameter nya,
+     *   secara otomatis detail error akan dimasukkan ke object BindingResult
+     * ● https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/validation/BindingResult.html
      */
 
     @PostMapping(path = "/create/person", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -105,6 +121,49 @@ public class PersonController {
         /**
          * method post http
          * endpoint: localhost:8080/create/personnedtedobject?objectCreatePersonRequest=valueAttribute&objcetCreateAddressRequest=valueAttribute&objectCreateSocialMediaRequest=valueAttribute
+         */
+
+    }
+
+    // binding result
+    @PostMapping(path = "/create/person/bindingresult", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> createPersonBindingResult(@ModelAttribute @Valid CreatePersonRequest request,
+                                               BindingResult bindingResult){
+
+        // List<ObjectError> getAllErrors() // Dapatkan semua error, baik global field lapangan.
+        // List<FieldError> getFieldErrors() // Dapakan error, dengan field entity
+        List<FieldError> errors = bindingResult.getFieldErrors();
+        if (!errors.isEmpty()){
+
+            errors.forEach(fieldError -> {
+                // System.out.println(objectError.getDefaultMessage());
+                System.out.println(fieldError.getField() + " : " + fieldError.getDefaultMessage());
+            });
+           // return ResponseEntity.badRequest().body("you send invalid data");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("you send invalid data"); // getDefaultMessage() diganti dengan pesan error ini
+        }
+
+        System.out.println(request);
+
+        String response =  new StringBuilder().append("Success create person ")
+                .append(request.getFirstName()).append(" ")
+                .append(request.getMiddleName()).append(" ")
+                .append(request.getLastName())
+                .append(" with email ").append(request.getEmail())
+                .append(" and phone ").append(request.getPhone())
+                .append(" with address ")
+                .append(request.getAddress().getStreet()).append(", ")
+                .append(request.getAddress().getCity()).append(", ")
+                .append(request.getAddress().getCountry()).append(", ")
+                .append(request.getAddress().getPostalCode())
+                .toString();
+
+        return ResponseEntity.ok(response);
+        /**
+         * method post http
+         * endpoint: localhost:8080/create/person/bindingresult?objectCreatePersonRequest=valueAttribute
          */
 
     }

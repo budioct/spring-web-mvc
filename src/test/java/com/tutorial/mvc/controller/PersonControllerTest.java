@@ -145,4 +145,32 @@ class PersonControllerTest {
          */
     }
 
+    @Test
+    void testCreatePersonBadRequestBindingResult() throws Exception {
+
+        // testing dengan parameter object. yang di handle dengan annotation @ModelAttribute
+        // @Valid badrequest dengan attribute yang null
+
+        mockMvc.perform(
+                post("/create/person/bindingresult")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+//                        .param("firstName", "budhi")
+                        .param("middleName", "oct")
+                        .param("lastName", "octaviansyah")
+//                        .param("email", "budhi@test.com")
+//                        .param("phone", "08999912222")
+        ).andExpectAll(
+                status().isBadRequest(),
+                content().string(Matchers.containsString("you send invalid data"))
+        );
+
+        /**
+         * error messages return BindingResult
+         * phone : must not be blank
+         * email : must not be blank
+         * firstName : must not be blank
+         */
+
+    }
+
 }
