@@ -136,12 +136,14 @@ public class AuthController {
     }
 
     @GetMapping(path = "/user/session/current")
+//    @GetMapping(path = "/user/current")
     @ResponseBody
-    public ResponseEntity<String> getUserSession(@SessionAttribute(name = "user") User user){
+    public String getUserSession(@SessionAttribute(name = "user") User user){
 
         // @SessionAttribute // annotation yang handle untuk get session attrubute di server
 
-        return ResponseEntity.ok("Hello " + user.getUsername());
+        // return ResponseEntity.ok("Hello " + user.getUsername());
+        return "Hello " + user.getUsername();
 
         /**
          * endpoint: localhost:8080/user/session/current

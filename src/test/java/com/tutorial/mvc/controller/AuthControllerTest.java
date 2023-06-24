@@ -107,4 +107,18 @@ class AuthControllerTest {
         );
     }
 
+    @Test
+    void testMiddlewaregetSessionUser() throws Exception {
+
+        // user yang tidak login atau tidak mendapatkan session atau session expire akan di redirect ke /login url root awal
+
+        mockMvc.perform(
+                get("/user/session/current")
+        ).andExpectAll(
+                status().is3xxRedirection()
+        );
+
+    }
+
+
 }
