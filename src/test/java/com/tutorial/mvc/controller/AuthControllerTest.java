@@ -1,5 +1,6 @@
 package com.tutorial.mvc.controller;
 
+import com.tutorial.mvc.entity.User;
 import jakarta.servlet.http.Cookie;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -71,6 +72,35 @@ class AuthControllerTest {
         mockMvc.perform(
                 get("/auth/user")
                         .cookie(new Cookie("username", "budhi"))
+        ).andExpectAll(
+                status().isOk(),
+                content().string(Matchers.containsString("Hello budhi"))
+        );
+    }
+
+    @Test
+    void testLoginSuccessSession() throws Exception {
+
+        mockMvc.perform(
+                post("/auth/login/session/current")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .queryParam("username", "budhi")
+                        .queryParam("password", "rahasia")
+                        .sessionAttr("user", new User("budhi"))
+        ).andExpectAll(
+                status().isOk(),
+                content().string(Matchers.containsString("OK")),
+                cookie().value("username", Matchers.is("budhi"))
+                // content().string(Matchers.containsString("Hello budhi"))
+        );
+    }
+
+    @Test
+    void testGetUserSession() throws Exception {
+
+        mockMvc.perform(
+                get("/user/session/current")
+                        .sessionAttr("user", new User("budhi"))
         ).andExpectAll(
                 status().isOk(),
                 content().string(Matchers.containsString("Hello budhi"))

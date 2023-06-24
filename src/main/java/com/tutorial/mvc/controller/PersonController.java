@@ -139,7 +139,7 @@ public class PersonController {
 
             errors.forEach(fieldError -> {
                 // System.out.println(objectError.getDefaultMessage());
-                System.out.println(fieldError.getField() + " : " + fieldError.getDefaultMessage());
+                System.out.println(fieldError.getField() + " : " + fieldError.getDefaultMessage()); // ketika filed yang di si set @NotBlank akan  akan di tampilkan field error
             });
            // return ResponseEntity.badRequest().body("you send invalid data");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("you send invalid data"); // getDefaultMessage() diganti dengan pesan error ini
