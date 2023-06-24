@@ -1,6 +1,5 @@
 package com.tutorial.mvc.controller;
 
-import com.tutorial.mvc.entity.User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
