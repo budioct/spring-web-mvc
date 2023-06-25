@@ -1,10 +1,14 @@
 package com.tutorial.mvc;
 
 import com.tutorial.mvc.interceptor.SessionInterceptor;
+import com.tutorial.mvc.resolver.PatnerArgumentResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @Configuration // annotation teregister sebagai konfigurasi/pengaturan spring
 public class MyWebConfig implements WebMvcConfigurer {
@@ -25,7 +29,13 @@ public class MyWebConfig implements WebMvcConfigurer {
      */
 
     @Autowired
-    private SessionInterceptor sessionInterceptor;
+    private SessionInterceptor sessionInterceptor; // object yang di set sebagai interceptor
+
+    @Autowired
+    private PatnerArgumentResolver patnerArgumentResolver; // object yang di set sebagai resolver
+    /**
+     * registrasikan object supaya di kenali Web Mvc Configurer
+     */
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -37,5 +47,10 @@ public class MyWebConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(sessionInterceptor).addPathPatterns("/user/**"); // InterceptorRegistration addPathPatterns(String... patterns) // kita bisa set patter url
 
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(patnerArgumentResolver); // boolean add(T param) // menambahkan object resolver
     }
 }
