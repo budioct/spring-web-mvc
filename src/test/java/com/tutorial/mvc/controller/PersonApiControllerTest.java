@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tutorial.mvc.entity.CreateAddressRequest;
 import com.tutorial.mvc.entity.CreatePersonRequest;
 import com.tutorial.mvc.entity.CreateSocialMediaRequest;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -67,6 +69,7 @@ class PersonApiControllerTest {
                         .content(jsonRequest)
         ).andExpectAll(
                 status().isOk(),
+                header().string(HttpHeaders.CONTENT_TYPE, Matchers.containsString(MediaType.APPLICATION_JSON_VALUE)),
                 content().json(jsonRequest)
         );
 
@@ -84,6 +87,7 @@ class PersonApiControllerTest {
     void testPersonApiValidationBadRequest() throws Exception {
 
         // di test ini kita tidak akan mengisi attribute yang sudah di set @NotBlank.
+        // supaya mengetahui apakah validasi sudah aktif
 
         CreateAddressRequest address = new CreateAddressRequest();
         address.setStreet("jl. panjang pendek");
@@ -129,6 +133,52 @@ class PersonApiControllerTest {
          * "hobbies":["eating","coding","sleeping"],
          * "socialMedia":[{"name":"twitter","location":"twitter.com/budhi"},{"name":"facebook","location":"facebook.com/budhi"}]}
          */
+
+    }
+
+
+    @Test
+    void testPersonApiValidationError() throws Exception {
+
+        // di test ini kita tidak akan mengisi attribute yang sudah di set @NotBlank.
+        // supaya mengetahui apakah validasi sudah aktif
+
+        CreateAddressRequest address = new CreateAddressRequest();
+        address.setStreet("jl. panjang pendek");
+        address.setCity("kebumen");
+        address.setCountry("indonesia");
+        address.setPostalCode("11111");
+
+        CreatePersonRequest person = new CreatePersonRequest();
+        // person.setFirstName("budhi");
+        person.setMiddleName("oct");
+        person.setLastName("octaviansyah");
+        // person.setEmail("budhi@test.com");
+        // person.setPhone("08999912222");
+        person.setAddress(address);
+        person.setHobbies(List.of("eating", "coding", "sleeping"));
+        person.setSocialMedia(new ArrayList<>());
+        person.getSocialMedia().add(new CreateSocialMediaRequest("twitter", "twitter.com/budhi"));
+        person.getSocialMedia().add(new CreateSocialMediaRequest("facebook", "facebook.com/budhi"));
+
+        String jsonRequest = objectMapper.writeValueAsString(person); // String writeValueAsString(Object value) throws JsonProcessingException // object java konversi ke format JSON
+
+        // test
+        // dengan harapan path /api/person
+        // content-type yang sudah di set consumes(saat request) dan produce(saat response)
+        // content dengan format string json
+
+        // setelah itu berekpetasi dengan status isBadRequest() karena attribute yang sudah di validasi @NotBlank tidak di isi. padalah tidak boleh null
+        mockMvc.perform(
+                post("/api/person")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+        ).andExpectAll(
+                status().isBadRequest(),
+                content().string(Matchers.containsString("Validator Error from : "))
+        );
+
 
     }
 

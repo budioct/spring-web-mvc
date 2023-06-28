@@ -14,6 +14,13 @@ import java.util.Date;
 public class DateController {
 
     /**
+     *
+     * Konversi Tipe Data
+     * ● Kita tahu bahwa query parameter itu datanya adalah String
+     * ● Namun jika kita membutuhkan datanya dalam bentuk tipe data lain, Spring bisa secara otomatis
+     *   melakukan konversi tipe datanya menggunakan fitur Converter yang pernah kita bahas di materi
+     *   Spring Config Properties
+     *
      * Response Body
      * ● Secara default, kita harus menuliskan response dari Controller Method ke HttpServletResponse
      * ● Namun hal ini kadang menyulitkan jika misal kita hanya ingin mengembalikan data berupa String
@@ -30,6 +37,7 @@ public class DateController {
      *
      */
 
+    // SimpleDateFormat adalah object converter dari Date string ke format Date native
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd"); // bentuk format date ketika di tampilkan 20231022
 
     @GetMapping(path = "/date")
@@ -45,6 +53,10 @@ public class DateController {
          */
 
     }
+
+    /**
+     * implementasi @ResponseBody. sebagai penganti HttpServletResponse yang handle return content ke clinet
+     */
 
     @GetMapping(path = "/datewithresponsebody")
     @ResponseBody

@@ -97,6 +97,7 @@ class PersonControllerTest {
         );
 
         /**
+         * result query param:
          * CreatePersonRequest(
          * firstName=budhi, middleName=oct, lastName=octaviansyah, email=budhi@test.com, phone=08999912222,
          * address=CreateAddressRequest(street=jalan panjang pendek, city=kebumen, country=indonesia, postalCode=11111),

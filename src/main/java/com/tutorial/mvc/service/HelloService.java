@@ -11,6 +11,8 @@ public interface HelloService {
      * ● Lalu kita akan buat class implementasi yang diregistrasikan sebagai Spring Bean
      * ● Sedangkan class yang membutuhkan Service Layer tersebut, akan menggunakan Interface nya,
      *   bukan class implementasinya
+     *
+     * note:
      * ● Salah satu keuntungan mengekspos Interface dibanding Class adalah, kita bisa mengubah atau
      *   mengganti isi dari class implementasi, tanpa berdampak pada class lain yang menggunakan interface nya
      */

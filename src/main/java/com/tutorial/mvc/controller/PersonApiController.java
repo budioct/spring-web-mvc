@@ -42,10 +42,12 @@ public class PersonApiController {
     @ResponseBody
     public CreatePersonRequest createPerson(@RequestBody @Valid CreatePersonRequest request){
 
-        // @ResponseBody kita tidak perlu lagi HttpServletResponse dan menuliskan feedback manual untuk client seperti: response.getWriter().println()
+        // @ModelAttribute annotation yang menghendle object/class bean (bisa menerima query param lebih dari 2 atau 10 parameter). karna pasti akan melelahkan jika menggunkan @RequestParam
         // @RequestBody // handle request client seperti format JSON, XML,  dll..
         // @Valid // terintegrasi dengan spring WEBMVC , saat membuat parameter @ModelAttribute atau @RequestBody, jika object tersebut ingin di
         // validasi secara otomatis menggunakan Bean Validation. Jika data tidal valid, secara otomatis Spring akan mengembalikan response 400 Bad Request (request di tolak)
+
+        System.out.println(request);
 
         return request;
     }

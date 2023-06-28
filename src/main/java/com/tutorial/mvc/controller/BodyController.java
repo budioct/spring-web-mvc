@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tutorial.mvc.entity.HelloRequest;
 import com.tutorial.mvc.entity.HelloResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+@Slf4j
 @Controller
 public class BodyController {
 
@@ -39,6 +41,8 @@ public class BodyController {
 
         HelloResponse response = new HelloResponse();
         response.setHello("Hello " + request.getName());
+
+        log.info("Response: {}", response.getHello());
 
         return objectMapper.writeValueAsString(response); // String writeValueAsString(Object value) // konversi menjadi JSON
 

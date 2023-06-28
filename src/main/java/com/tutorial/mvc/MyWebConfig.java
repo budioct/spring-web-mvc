@@ -14,6 +14,9 @@ import java.util.List;
 public class MyWebConfig implements WebMvcConfigurer {
 
     /**
+     *
+     * class ini adalah untuk kita bisa menambahkan konfigurasi tambahan di spring web mvc
+     *
      * MVC Config
      * ● Saat membuat aplikasi web menggunakan Spring Web MVC, kita bisa menambahkan pengaturan
      *   untuk Spring Web MVC
@@ -29,7 +32,7 @@ public class MyWebConfig implements WebMvcConfigurer {
      */
 
     @Autowired
-    private SessionInterceptor sessionInterceptor; // object yang di set sebagai interceptor
+    private SessionInterceptor sessionInterceptor; // object yang di set sebagai interceptor / middleware / webFilter
 
     @Autowired
     private PatnerArgumentResolver patnerArgumentResolver; // object yang di set sebagai resolver
@@ -37,8 +40,11 @@ public class MyWebConfig implements WebMvcConfigurer {
      * registrasikan object supaya di kenali Web Mvc Configurer
      */
 
+    // registrasi object interceptor yang sudah dibuat
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+
+        // default void addInterceptors(InterceptorRegistry registry) // implementasi object interceptor unutuk di registrasikan ke WebMvcConfigurer
 
         // method ini bertugas pencegat siklus hidup Spring MVC untuk pra- dan pasca-pemrosesan pemanggilan metode control dan request penangan sumber daya.
         // https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/AntPathMatcher.html // jika ingin melihat pattern url
@@ -49,8 +55,12 @@ public class MyWebConfig implements WebMvcConfigurer {
 
     }
 
+    // registrasi object resolver yang sudah dibuat
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+
+        // default void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) // implementasi object resolver unutuk di registrasikan ke WebMvcConfigurer
+
         resolvers.add(patnerArgumentResolver); // boolean add(T param) // menambahkan object resolver
     }
 }

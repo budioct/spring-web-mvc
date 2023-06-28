@@ -22,18 +22,19 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     // method yang telah dibuat sebaiknya di registrasikan ke MVC Config. class nya sudah kita buat di MyWebConfig.java yang implements WebMvcConfigurer
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request,
+                             HttpServletResponse response,
+                             Object handler) throws Exception {
 
         // kita buat method ini bertugas sebagai middleware
-        // kita akan ceak session user. ketika ada kita return true. jika tidak ada sessionya kita return false
+        // kita akan ceak session attribute/key user. ketika datanya key user ada kita return true. jika tidak ada sessionya kita return false
 
         HttpSession session = request.getSession(true); // HttpSession getSession(boolean var1) // Mengembalikan arus HttpSession yang terkait dengan permintaan ini atau, jika tidak ada sesi saat ini dan create true, mengembalikan new session.
         User user = (User) session.getAttribute("user"); // Object getAttribute(String var1) // return object yang binding dengan nama yang ditentukan dalam session. atau null jika tidak ada objeck yang terikat dengan nama tersebut
         // ketika tidak ada session maka akan di redirect ke url login
         if (user == null){
-            response.sendRedirect("/login");
-            // jika tidak ada session kembalikan false
-            return false;
+            response.sendRedirect("/login"); // jika user null makan redirect status code 302 ke route /login
+            return false; // jika tidak ada session kembalikan false
         }
 
         // jika ada session kembalikan true

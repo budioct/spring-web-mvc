@@ -15,10 +15,10 @@ public class PartnerController {
     @ResponseStatus(HttpStatus.OK)
     public String getPatner(Partner partner){
 
-        // karena kita telah membuatkan entity Partner Resolver, jadi tidak perlu lagi menggunakan @ModelAttribure, @RequestBody, @RequestParam
-        // error handle nya sudah di handle spring
+        // karena kita telah membuatkan entity Partner menjadi parameter Resolver, jadi tidak perlu lagi menggunakan @ModelAttribure, @RequestBody, @RequestParam
+        // error handle nya sudah di handle oleh object Resolver yang sudah di tambahkan ke mvc configurer
 
-        return  partner.getId() + " " + partner.getName();
+        return  partner.getId() + " " + partner.getName(); // result
 
         /**
          * endpoint: localhost:8080/partner/current

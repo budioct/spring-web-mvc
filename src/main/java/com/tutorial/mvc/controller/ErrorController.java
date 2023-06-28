@@ -7,7 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@ControllerAdvice // handle error Controller, seperti validation error, logic error, dan lain-lain. kita akan membuat response error sendiri
+@ControllerAdvice // handle error ControllerAdvice, Controller Advice adalah sebuah class yang dipanggil ketika sebuah jenis exception terjadi
 public class ErrorController {
 
     /**
@@ -36,21 +36,27 @@ public class ErrorController {
     // ini adalah joinpoint dan pointcut Exception
 
     // error dari spring.. yang handle pesan Exception. dan berjalan di Runtime
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class) // menangkap exception dan megubah response nya
     public ResponseEntity<String> methodArgumentNotValidException(MethodArgumentNotValidException exception){
 
-        // @ExceptionHandler() // menanangkap error yang terjadi
-        // MethodArgumentNotValidException // object yang di gunakan untuk menangkap error di spring
+        // ini exception spring boot
 
+        // @ExceptionHandler() // menanangkap error yang terjadi
+        // MethodArgumentNotValidException // object yang di gunakan untuk menangkap validation exception
+
+        // response yang diberikan ke client ketika ada error validasi
         return new ResponseEntity<>("Validator Error from : " + exception.getMessage(), HttpStatus.BAD_REQUEST); // ResponseEntity(@Nullable T body, HttpStatusCode status) // return value MethodArgumentNotValidException dan status code
 
         /**
-         * testing endpoint: localhost:8080/person/api
+         * Method Http Post
+         * testing endpoint: localhost:8080/api/person
          */
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<String> constraintViolationException(ConstraintViolationException exception){
+
+        // ini exception native
 
         return new ResponseEntity<>("Validator Error from : " + exception.getMessage(), HttpStatus.BAD_REQUEST); // ResponseEntity(@Nullable T body, HttpStatusCode status) // return value ConstraintViolationException dan status code
     }

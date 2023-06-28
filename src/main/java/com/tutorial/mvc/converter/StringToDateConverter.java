@@ -13,10 +13,18 @@ import java.util.Date;
 public class StringToDateConverter implements Converter<String, Date> {
 
     /**
-     * object utils interface Converter<D, T>
+     * Konversi Tipe Data
+     * ● Kita tahu bahwa query parameter itu datanya adalah String
+     * ● Namun jika kita membutuhkan datanya dalam bentuk tipe data lain, Spring bisa secara otomatis
+     *   melakukan konversi tipe datanya menggunakan fitur Converter yang pernah kita bahas di materi
+     *   Spring Config Properties
+     *
+     *
+     * object utils interface Converter<S, T>
      * T convert(S source);
      */
 
+    // SimpleDateFormat adalah object converter dari Date string ke format Date native
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // set bentuk format string date 2023-06-22
 
     @Override

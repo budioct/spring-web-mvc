@@ -1,5 +1,7 @@
 package com.tutorial.mvc.controller;
 
+import com.tutorial.mvc.service.impl.HelloServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +36,9 @@ public class FormController {
      *
      */
 
+    @Autowired
+    HelloServiceImpl helloService;
+
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd"); // bentuk format date ketika di tampilkan 20231022
 
     @PostMapping(path = "/form/hello",
@@ -45,15 +50,17 @@ public class FormController {
     @ResponseBody
     public String hello(@RequestParam(name = "name") String name){
 
+        String data = helloService.hello(name);
+
         // return "Hello " + name; // response ke client
         // response html Content-Type ke client
         return """
                 <html>
                 <body>
-                <h1>Hello $name</h1>
+                <h1>$name</h1>
                 </body>
                 </html>
-                """.replace("$name", name);
+                """.replace("$name", data);
 
         /**
          * endpoint: localhost:8080/form/hello?name=budhi

@@ -59,15 +59,6 @@ public class PersonController {
      * ● Jika data tidal valid, secara otomatis Spring akan mengembalikan response 400 Bad Request
      * ● Khusus validasi di Controller, exception yang akan dibuat adalah
      *   MethodArgumentNotValidException bukan ConstraintViolationException nya Bean Validation
-     *
-     * Binding Result
-     * ● Secara default, jika terjadi error di @ModelAttribute atau @RequestBody, maka akan throw
-     *   exception MethodArgumentNotValidExceptio
-     * ● Kadang kita tidak ingin hal itu terjadi, misal kita ingin tetap masuk ke Controller Method, karena di
-     *   dalam nya kita ingin menampilkan halaman errornya misalnya
-     * ● Pada kasus seperti itu, kita bisa tambahkan parameter BindingResult di sebelah parameter nya,
-     *   secara otomatis detail error akan dimasukkan ke object BindingResult
-     * ● https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/validation/BindingResult.html
      */
 
     @PostMapping(path = "/create/person", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -75,8 +66,8 @@ public class PersonController {
     @ResponseStatus(HttpStatus.OK)
     public String createPerson(@ModelAttribute @Valid CreatePersonRequest request){
 
-        // @ModelAttribute annotation yang menghendle object/class bean. karna pasti akan melelahkan jika menggunkan @RequestParam
-        // @Valid // terintegrasi dengan spring WEBMVC , saat membuat parameter @ModelAttribute atau @RequestBody, jika object tersebut ingin di
+        // @ModelAttribute annotation yang menghendle object/class bean (bisa menerima query param lebih dari 2 atau 10 parameter). karna pasti akan melelahkan jika menggunkan @RequestParam
+        // @Valid // terintegrasi dengan spring WEBMVC (untuk validasi object dalam parameter method) , saat membuat parameter @ModelAttribute atau @RequestBody, jika object tersebut ingin di
         // validasi secara otomatis menggunakan Bean Validation. Jika data tidal valid, secara otomatis Spring akan mengembalikan response 400 Bad Request (request di tolak)
 
         return new StringBuilder().append("Success create person ")
@@ -94,7 +85,10 @@ public class PersonController {
 
     }
 
-    // nested object
+
+    /**
+     * implementasi nedted object yang akan di handle oleh @ModelAttribure, bisa membaca param lebih dari 1 termsauk object java bean
+     */
     @PostMapping(path = "/create/personnedtedobject", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -120,10 +114,21 @@ public class PersonController {
 
         /**
          * method post http
-         * endpoint: localhost:8080/create/personnedtedobject?objectCreatePersonRequest=valueAttribute&objcetCreateAddressRequest=valueAttribute&objectCreateSocialMediaRequest=valueAttribute
+         * endpoint: localhost:8080/create/person/bindingresult?objectCreatePersonRequest=valueAttribute
          */
 
     }
+
+    /**
+     * Binding Result
+     *  ● Secara default, jika terjadi error di @ModelAttribute atau @RequestBody, maka akan throw
+     *    exception MethodArgumentNotValidExceptio
+     *  ● Kadang kita tidak ingin hal itu terjadi, misal kita ingin tetap masuk ke Controller Method, karena di
+     *    dalam nya kita ingin menampilkan halaman errornya misalnya
+     *  ● Pada kasus seperti itu, kita bisa tambahkan parameter BindingResult di sebelah parameter nya,
+     *    secara otomatis detail error akan dimasukkan ke object BindingResult
+     *  ● https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/validation/BindingResult.html
+     */
 
     // binding result
     @PostMapping(path = "/create/person/bindingresult", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -132,7 +137,11 @@ public class PersonController {
     public ResponseEntity<String> createPersonBindingResult(@ModelAttribute @Valid CreatePersonRequest request,
                                                BindingResult bindingResult){
 
+        // @ModelAttribute annotation yang menghendle object/class bean. karna pasti akan melelahkan jika menggunkan @RequestParam
+
         // List<ObjectError> getAllErrors() // Dapatkan semua error, baik global field lapangan.
+        //List<ObjectError> errors = bindingResult.getAllErrors();
+
         // List<FieldError> getFieldErrors() // Dapakan error, dengan field entity
         List<FieldError> errors = bindingResult.getFieldErrors();
         if (!errors.isEmpty()){
@@ -145,7 +154,7 @@ public class PersonController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("you send invalid data"); // getDefaultMessage() diganti dengan pesan error ini
         }
 
-        System.out.println(request);
+       // System.out.println(request);
 
         String response =  new StringBuilder().append("Success create person ")
                 .append(request.getFirstName()).append(" ")
@@ -161,9 +170,10 @@ public class PersonController {
                 .toString();
 
         return ResponseEntity.ok(response);
+
         /**
          * method post http
-         * endpoint: localhost:8080/create/person/bindingresult?objectCreatePersonRequest=valueAttribute
+         * endpoint: localhost:8080/create/person/bindingresult?objectCreatePersonRequest=valueAttribute&objcetCreateAddressRequest=valueAttribute&objectCreateSocialMediaRequest=valueAttribute
          */
 
     }

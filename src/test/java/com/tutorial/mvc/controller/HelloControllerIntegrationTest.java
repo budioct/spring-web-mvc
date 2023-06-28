@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 
 
 @Slf4j
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // webEnvironment() membuat lingkungan test dengan port yang acak. supaya tidak bentrok dengan port yang lain
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // webEnvironment() membuat lingkungan test dengan set port yang acak. supaya tidak bentrok dengan port yang lain
 public class HelloControllerIntegrationTest {
 
     /**
@@ -43,7 +43,7 @@ public class HelloControllerIntegrationTest {
      *
      */
 
-    @LocalServerPort // Untuk mendapatkan nilai port nya. yang sudah di ser WebEnv port random
+    @LocalServerPort // Untuk mendapatkan nilai port nya. yang sudah di set webEnvironment() port random
     private Integer port;
 
     @Autowired
@@ -54,11 +54,12 @@ public class HelloControllerIntegrationTest {
 
         // <T> ResponseEntity<T> getForEntity(String url, Class<T> responseType, Object... urlVariables) // Ambil entitas dengan melakukan GET pada URL yang ditentukan.
         ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port + "/hello", String.class);
-        String body = response.getBody(); // T getBody() // Buat yang baru Http Entity dengan badan yang diberikan dan tanpa tajuk.
+        String body = response.getBody(); // T getBody() // Buat yang baru Http Entity dengan body yang diberikan dan tanpa tajuk.
 
         Assertions.assertNotNull(body);
-        Assertions.assertEquals("Hello World", body.trim());
+        Assertions.assertEquals("Hello World", body.trim()); // String trim() // memotong prefix dan suffix value variable
 
+        log.info("Port: {}", port);
         log.info("Response: {}", body.trim());
 
     }
@@ -73,6 +74,7 @@ public class HelloControllerIntegrationTest {
         Assertions.assertNotNull(body);
         Assertions.assertEquals("Hello Guest", body.trim());
 
+        log.info("Port: {}", port);
         log.info("Response: {}", body.trim());
 
     }
@@ -87,6 +89,7 @@ public class HelloControllerIntegrationTest {
         Assertions.assertNotNull(body);
         Assertions.assertEquals("Hello Budhi", body.trim());
 
+        log.info("Port: {}", port);
         log.info("Response: {}", body.trim());
 
     }

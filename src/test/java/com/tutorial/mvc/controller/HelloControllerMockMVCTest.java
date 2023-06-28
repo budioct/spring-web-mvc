@@ -42,11 +42,11 @@ class HelloControllerMockMVCTest {
     void testHello() throws Exception {
 
         // ResultActions perform(RequestBuilder requestBuilder) throws Exception // Lakukan permintaan dan kembalikan jenis yang memungkinkan merantai tindakan lebih lanjut, seperti menyatakan ekspektasi, pada hasilnya.
-        // static MockHttpServletRequestBuilder get(URI uri) // Buat MockHttpServletRequestBuilder untuk permintaan GET.
+        // static MockHttpServletRequestBuilder get(URI uri) // Buat MockHttpServletRequestBuilder untuk request method http GET.
         // default ResultActions andExpectAll(ResultMatcher... matchers) throws Exception // Lakukan banyak harapan, dengan jaminan bahwa semua harapan akan ditegaskan bahkan jika satu atau lebih harapan gagal dengan pengecualian.
         // static StatusResultMatchers status() // Akses ke pernyataan status respons.
         // ResultMatcher isOk() // Tegaskan kode status respons adalah HttpStatus.OK(200).
-        // static ContentResultMatchers content() // Akses ke pernyataan badan tanggapan.
+        // static ContentResultMatchers content() // Akses ke pernyataan body tanggapan.
         // ResultMatcher string(Matcher<? super String> matcher) // Menegaskan konten isi respons dengan Hamcrest Matcher.
         // static Matcher<java.lang.String> containsString(java.lang.String substring) // Membuat pencocokan yang cocok jika yang diperiksa String berisi yang ditentukan String di mana saja.
 
@@ -76,11 +76,14 @@ class HelloControllerMockMVCTest {
     @Test
     void testHelloBudhi() throws Exception {
 
-        // MockHttpServletRequestBuilder queryParam(String name, String... values) // Tambahkan ke string kueri dan tambahkan juga ke request parameters peta.
+        // MockHttpServletRequestBuilder queryParam(String name, String... values) // Tambahkan ke query param http dan tambahkan juga ke request parameters peta.
+        // query param http ?name=budhi
+        // seperti: localhost:8080/hellobro?name=budhi
 
         // versi pipeline
         mockMvc.perform(
-                get("/hellobro").queryParam("name", "budhi")
+                get("/hellobro")
+                        .queryParam("name", "budhi")
         ).andExpectAll(
                 status().isOk(),
                 content().string(Matchers.containsString("Hello budhi"))
@@ -108,7 +111,7 @@ class HelloControllerMockMVCTest {
     @Test
     void testPostNotAllow() throws Exception {
 
-        // kita uji coba pada endopoint yang sudah di set HTTP method get. tetapi kita melkukan post maka ini tidak di izinkan
+        // kita uji coba pada endopoint yang sudah di set HTTP method get. tetapi kita melkukan HTTP method post maka ini tidak di izinkan
 
         // ResultActions perform(RequestBuilder requestBuilder) throws Exception // Buat Mock HttpServletRequestBuilder untuk permintaan POST.
         // ResultMatcher isMethodNotAllowed() // Tegaskan kode status respons adalah HttpStatus.METHOD_NOT_ALLOWED(405).
@@ -118,6 +121,24 @@ class HelloControllerMockMVCTest {
                         .queryParam("name", "budhi")
         ).andExpectAll(
                 status().isMethodNotAllowed()
+        );
+
+    }
+
+    @Test
+    void testGetAllow() throws Exception {
+
+        // kita uji coba endpoint yang sudah di set method HTTP GET. dan request dengan method HTTP GET juga
+
+        // ResultActions perform(RequestBuilder requestBuilder) throws Exception // Buat Mock HttpServletRequestBuilder untuk permintaan POST.
+        // ResultMatcher isMethodNotAllowed() // Tegaskan kode status respons adalah HttpStatus.METHOD_NOT_ALLOWED(405).
+
+        mockMvc.perform(
+                get("/hellomethodget")
+                        .queryParam("name", "budhi")
+        ).andExpectAll(
+                status().isOk(),
+                content().string(Matchers.containsString("Hello budhi"))
         );
 
     }

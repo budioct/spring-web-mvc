@@ -5,12 +5,14 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Controller
 public class AuthController {
 
@@ -85,11 +87,16 @@ public class AuthController {
 
     }
 
+    /**
+     * implementasi get cookie dari clinet
+     */
+
     @GetMapping(path = "/auth/user")
     public ResponseEntity<String> getUserCookie(@CookieValue("username") String username){
 
         // @CookieValue // membaca Cookie yang dikirim oleh Web Browser
 
+        log.info("Get Cookie with username: {}", username);
         return ResponseEntity.ok("Hello " + username);
 
         /**
@@ -109,10 +116,10 @@ public class AuthController {
         if ("budhi".equals(username) && "rahasia".equals(password)){
             // session
             HttpSession session = servletRequest.getSession(true); // HttpSession getSession(boolean var1) // Mengembalikan arus HttpSession yang terkait dengan permintaan ini atau, jika tidak ada sesi saat ini dan create true, mengembalikan new session.
-            session.setAttribute("user", new User(username)); // void setAttribute(String var1, Object var2) // binding objek ke session ini, menggunakan nama yang ditentukan.
+            session.setAttribute("user", new User(username)); // void setAttribute(String var1, Object var2) // set binding objek ke session ini, menggunakan nama yang ditentukan.
 
             // cookie
-            Cookie cookie = new Cookie("username", username); // Cookie(String name, String value) // set bind username yang berhasil login
+            Cookie cookie = new Cookie("username", username); // Cookie(String name, String value) // set binding username yang berhasil login
             cookie.setPath("/"); // path/route // Menentukan jalur untuk cookie tempat klien harus mengembalikan cookie.
             servletResponse.addCookie(cookie); // Menambahkan cookie yang ditentukan ke respons.
 
@@ -135,6 +142,7 @@ public class AuthController {
 
     }
 
+    // Get Session
     @GetMapping(path = "/user/session/current")
 //    @GetMapping(path = "/user/current")
     @ResponseBody

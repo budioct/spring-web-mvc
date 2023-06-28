@@ -49,7 +49,8 @@ public class UploadController {
         Files.write(uploadLocation, profile.getBytes());
         //Files.copy(profile.getInputStream(), uploadLocation);
 
-        return "Success save profile " + name + " to " + uploadLocation;
+        return "Success save profile " + name + " to " + uploadLocation.normalize().toString().replace("\\","/");
+        // .normalize().toString().replace("\\","/") // path backslash \ akan di replace dengan slash /
     }
 
     /**

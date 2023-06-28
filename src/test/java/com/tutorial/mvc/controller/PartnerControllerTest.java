@@ -24,18 +24,24 @@ class PartnerControllerTest {
     @Test
     void testGetPartneSuccess() throws Exception {
 
+        // .header("X-API-KEY", "BUDHI")
+        // header(keyResolver, idObjectParent / key)
+
         mockMvc.perform(
                 get("/partner/current")
-                        .header("X-API-KEY", "SAMPLE")
+                        .header("X-API-KEY", "BUDHI")
         ).andExpectAll(
                 status().isOk(),
-                content().string(Matchers.containsString("SAMPLE Sample Partner"))
+                content().string(Matchers.containsString("BUDHI Sample Partner"))
         );
 
     }
 
     @Test
     void testGetPartneFailed() throws Exception {
+
+        // kita set key header dengan format yang salah. suapaya kita tahu Exception apa yang di tangkap
+        // apakah dari object resolver yang tangkap atau dari spring
 
         mockMvc.perform(
                 get("/partner/current")
@@ -46,8 +52,12 @@ class PartnerControllerTest {
 
         /**
          * kita mencoba set key header yang salah
-         * result exception: kena error resolver tandanya berhasil
+         * // exception dari resolver yang dibuat
          * jakarta.servlet.ServletException: Request processing failed: java.lang.RuntimeException: Unauthorized Exception
+         *
+         * // exception dari spring mvc
+         * jakarta.servlet.ServletException: Request processing failed: java.lang.NullPointerException: Cannot invoke "com.tutorial.mvc.entity.Partner.getId()" because "partner" is null
+         *
          */
 
     }

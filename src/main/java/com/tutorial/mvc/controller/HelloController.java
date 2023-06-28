@@ -4,6 +4,7 @@ import com.tutorial.mvc.service.HelloService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +54,15 @@ public class HelloController {
          */
     }
 
+    /**
+     * Servlet Request dan Response
+     * ● Saat kita membuat Controller Handler dengan RequestMapping
+     * ● Kita bisa menambahkan parameter HttpServletRequest atau HttpServletResponse jika memang
+     *   butuh object tersebut
+     * ● Tidak ada aturan posisi parameter, karena Spring WebMVC bisa mendeteksi secara otomatis tipe
+     *   dan posisi parameter nya
+     */
+
     @RequestMapping(path = "/hellobro")
     public void helloWorld(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -70,11 +80,15 @@ public class HelloController {
          */
     }
 
+    /**
+     * implementasi @Service dari class HelloServiceImpl
+     */
+
     @RequestMapping(path = "/helloservice")
     public void helloService(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String name = request.getParameter("name"); // String getParameter(String var1); // Mengembalikan nilai parameter permintaan sebagai String, atau nulljika parameter tidak ada.
-        String responseBody = helloService.hello(name);
+        String responseBody = helloService.hello(name); // implementasi service
         response.getWriter().println(responseBody);
 
         /**
@@ -83,12 +97,8 @@ public class HelloController {
     }
 
     /**
-     * Servlet Request dan Response
-     * ● Saat kita membuat Controller Handler dengan RequestMapping
-     * ● Kita bisa menambahkan parameter HttpServletRequest atau HttpServletResponse jika memang
-     *   butuh object tersebut
-     * ● Tidak ada aturan posisi parameter, karena Spring WebMVC bisa mendeteksi secara otomatis tipe
-     *   dan posisi parameter nya
+     * implementasi method http request. dengan annotation @RequestMapping pada method() contohnya dengan method HTTP GET --> RequestMethod.GET
+     * jika method http tidak diterima makan Exception status code 405 Method Not Allowed
      */
 
     @RequestMapping(path = "/hellomethodget", method = RequestMethod.GET) // method() menentukan jenis HTTP method yang di perbolehkan untuk mengakses endpoint
@@ -104,7 +114,7 @@ public class HelloController {
 
     }
 
-    @GetMapping(path = "/helloserviceshortcut")
+    @GetMapping(path = "/helloserviceshortcut") // sudah set HTTP METHOD GET untuk di consume
     public void helloServiceShortcut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         // @GetMapping adalah shortcut dari @RequestMapping supaya sebih spesifik dan implisit, untuk menghandle enpoint
@@ -118,6 +128,10 @@ public class HelloController {
          */
     }
 
+    /**
+     * implementasi @RequestParam dari spring.. sebagai penganti HttpServletRequest untuk handle menangkap request masuk dari client
+     */
+
     @RequestMapping(path = "/helloservicerequestparam")
     public void helloService(@RequestParam(name = "name", required = false) String name,
                              HttpServletResponse response) throws IOException {
@@ -130,7 +144,5 @@ public class HelloController {
          * endpoint: http://localhost:8080/helloservicerequestparam?name=budhi
          */
     }
-
-
 
 }
