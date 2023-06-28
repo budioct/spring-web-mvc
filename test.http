@@ -1,0 +1,10 @@
+###
+# insert todos
+POST localhost:8080/todos?todo=running
+Accept: application/json
+
+###
+# get todos
+GET localhost:8080/todos
+Accept: application/json
+
