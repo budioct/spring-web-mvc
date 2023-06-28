@@ -47,5 +47,17 @@ class ModelAndViewControllerTest {
 
     }
 
+    @Test
+    void testHelloModelandViewRedirect() throws Exception {
+
+        // testing redirect. jika query parameter null makan akan di redirect ke route lain untuk di redirect
+
+        mockMvc.perform(
+                get("/web/helle/redirect")
+        ).andExpectAll(
+                status().is3xxRedirection()
+        );
+
+    }
 
 }

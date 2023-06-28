@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 public class ModelAndViewController {
@@ -59,6 +60,32 @@ public class ModelAndViewController {
         ));
 
     }
+
+    /**
+     * Redirect
+     * ● Jika kita ingin melakukan Redirect, selain menggunakan HttpServletResponse
+     * ● Jika pada kasus di Controller Method mengembalikan ModelAndView
+     * ● Kita bisa gunakan view name dengan prefix redirect:
+     * ● Secara otomatis Spring Web MVC akan melakukan redirect
+     */
+
+    @GetMapping("/web/helle/redirect")
+    public ModelAndView redirect(@RequestParam(name = "name", required = false) String name){
+
+        // karna balikanya object ModelAndView. bukan HttpServletResponse
+        // cek kondisi jika dari parameter null makan akan di redirect ke endpoint yang sudah di tentukan
+        if (Objects.isNull(name)){
+            return new ModelAndView("redirect:/web/helle/redirect?name=Guest"); // ModelAndView(String viewName) // redirect dengan prefix redirect: dan di ikuti route nya mau di alihkan kemana, jika kondisi tidak terpenuhi
+        }
+
+        return new ModelAndView("hello", Map.of(
+                "title", "Belajar View",
+                "name", "Hello " + name
+        ));
+
+
+    }
+
 
 
 }
